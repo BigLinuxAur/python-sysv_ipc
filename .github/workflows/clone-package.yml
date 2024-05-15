@@ -33,14 +33,11 @@ jobs:
           repo: $(cut -d "/" -f2 <<< ${{ github.repository }})
         run: |
           echo $repo
-          # if [ ! -d "$(cut -d "/" -f2 <<< ${{ github.repository }})" ];then
-          #   git clone https://aur.archlinux.org/$(cut -d "/" -f2 <<< ${{ github.repository }}).git
-          #   rm -r 
-          # else
-          #   echo "XPTO"
-          #   cd $(find -type f -name PKGBUILD | sed 's/PKGBUILD//')
-          #   git pull
-          # fi
+          if [ -d "$repo" ];then
+            rm -rf $repo
+          fi
+          git clone https://aur.archlinux.org/$(cut -d "/" -f2 <<< $repo).git
+          rm -rf $repo/.git
 
       - name: Setup TMATE Session
         uses: mxschmitt/action-tmate@v3
