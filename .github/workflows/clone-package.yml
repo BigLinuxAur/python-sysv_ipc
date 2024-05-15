@@ -9,8 +9,9 @@ on:
         required: false
         default: false
 
-  push:
-    branches: [ "*" ]
+  repository_dispatch:
+    types:
+      - AUR/*
 
 jobs:
   build:
