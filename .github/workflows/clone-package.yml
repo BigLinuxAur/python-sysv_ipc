@@ -30,9 +30,10 @@ jobs:
         if: ${{ ! inputs.debug_enabled }}
         shell: bash
         run: |
-          if [ ! -d "$(cut -d "/" -f2 <<< $GITHUB_REPOSITORY)" ];then
-            echo "git clone https://aur.archlinux.org/$(cut -d "/" -f2 <<< $GITHUB_REPOSITORY).git"
+          if [ ! -d "$(cut -d "/" -f2 <<< {{ github.repository }})" ];then
+            echo "git clone https://aur.archlinux.org/$(cut -d "/" -f2 <<< {{ github.repository }}).git"
           else
+            echo "XPTO"
             cd $(find -type f -name PKGBUILD | sed 's/PKGBUILD//')
             git pull
           fi
