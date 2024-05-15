@@ -25,11 +25,12 @@ jobs:
           git \
           wget
 
-      # - name: Clone from Aur
-      #   shell: bash
-      #   run: |
-      #     git clone https://aur.archlinux.org/.git
-          
+      - name: Clone from Aur
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled == 'false' }}
+        shell: bash
+        run: |
+          git clone https://aur.archlinux.org/$(cut -d "/" -f2 <<< $GITHUB_REPOSITORY).git
+
       - name: Setup TMATE Session
         uses: mxschmitt/action-tmate@v3
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
