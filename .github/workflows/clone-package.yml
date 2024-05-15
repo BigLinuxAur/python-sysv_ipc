@@ -26,7 +26,7 @@ jobs:
           wget
 
       - name: Clone from Aur
-        if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled == 'false' }}
+        if: ${{ ! inputs.debug_enabled }}
         shell: bash
         run: |
           git clone https://aur.archlinux.org/$(cut -d "/" -f2 <<< $GITHUB_REPOSITORY).git
