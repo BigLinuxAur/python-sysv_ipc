@@ -29,9 +29,8 @@ jobs:
       - name: Clone from Aur
         if: ${{ ! inputs.debug_enabled }}
         shell: bash
-        env:
-          repo: $(cut -d "/" -f2 <<< ${{ github.repository }})
         run: |
+          repo=$(cut -d "/" -f2 <<< ${{ github.repository }})
           echo $repo
           if [ -d "$repo" ];then
             rm -rf $repo
