@@ -29,14 +29,18 @@ jobs:
       - name: Clone from Aur
         if: ${{ ! inputs.debug_enabled }}
         shell: bash
+        env:
+          repo: $(cut -d "/" -f2 <<< ${{ github.repository }})
         run: |
-          if [ ! -d "$(cut -d "/" -f2 <<< ${{ github.repository }})" ];then
-            git clone https://aur.archlinux.org/$(cut -d "/" -f2 <<< ${{ github.repository }}).git
-          else
-            echo "XPTO"
-            cd $(find -type f -name PKGBUILD | sed 's/PKGBUILD//')
-            git pull
-          fi
+          echo $repo
+          # if [ ! -d "$(cut -d "/" -f2 <<< ${{ github.repository }})" ];then
+          #   git clone https://aur.archlinux.org/$(cut -d "/" -f2 <<< ${{ github.repository }}).git
+          #   rm -r 
+          # else
+          #   echo "XPTO"
+          #   cd $(find -type f -name PKGBUILD | sed 's/PKGBUILD//')
+          #   git pull
+          # fi
 
       - name: Setup TMATE Session
         uses: mxschmitt/action-tmate@v3
