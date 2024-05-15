@@ -30,7 +30,12 @@ jobs:
         if: ${{ ! inputs.debug_enabled }}
         shell: bash
         run: |
-          git clone https://aur.archlinux.org/$(cut -d "/" -f2 <<< $GITHUB_REPOSITORY).git
+          if [ ! -d "$(cut -d "/" -f2 <<< $GITHUB_REPOSITORY)" ];then
+            git clone https://aur.archlinux.org/$(cut -d "/" -f2 <<< $GITHUB_REPOSITORY).git
+          else
+            cd $(find -type f -name PKGBUILD | sed 's/PKGBUILD//')
+            git pull
+          fi
 
       - name: Setup TMATE Session
         uses: mxschmitt/action-tmate@v3
