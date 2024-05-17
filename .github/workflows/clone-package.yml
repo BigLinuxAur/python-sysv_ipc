@@ -12,6 +12,7 @@ on:
   repository_dispatch:
     types:
       - AUR/*
+      - clone
 
 jobs:
   build:
@@ -41,17 +42,36 @@ jobs:
       - name: Setup TMATE Session
         uses: mxschmitt/action-tmate@v3
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
+        
+      # - name: fix PKGBUILD
+      #   shell: bash
+      #   run: |
+      #     gitfolder=$(find -type f -name PKGBUILD | sed 's/PKGBUILD//')
+      #     cd $gitfolder
+      #     if [ "" ]; then
+      #       
+      #     fi
+      #     sed -i "/depends=/s/)/ \'xpto\')/" PKGBUILD
+      #     sed -i "/makedepends=/s/)/ \'xpto\')/" PKGBUILD
 
       - name: Update github
+        shell: bash
         run: |
           git config --local user.email "gitbarnabedikartola@gmail.com"
           git config --local user.name "gitbarnabedikartola"
-          git add --all
-          if [ -n "$(git commit -m "update $(date +%y-%m-%d_%H:%M)" -a | grep "nothing to commit")" ];then exit 0; fi
+          git add -fv --al
+          if [ -n "$(git commit -m "update $(date +%y-%m-%d_%H:%M)" -a | grep "nothing to commit")" ];then echo "nothing to commit"; exit 0; fi
 
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
           # github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ github.ref }}
+
+      - name: Trigger Build Workflow
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          event-type: build
+          client-payload: '{"bigbranch": "${{ github.event.client_payload.branch }}"}'
 
